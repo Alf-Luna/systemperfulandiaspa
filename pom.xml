@@ -9,6 +9,7 @@
     <module>microservice-eureka</module>
     <module>microservice-gateway</module>
     <module>microservice-perfume</module>
+    <module>microservice-user</module>
   </modules>
 
   <groupId>com.tecnotrans.perfulandiaspa</groupId>
