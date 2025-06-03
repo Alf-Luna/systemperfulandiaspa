@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.tecnotrans.microservice_perfume.Model.Perfume;
 import com.tecnotrans.microservice_perfume.Repository.PerfumeRepository;
@@ -18,7 +19,11 @@ public class PerfumeService {
     }
 
     public Perfume getPerfumeById(Long id){
-        return perfumeRepository.findById(id).orElse(new Perfume());
+        return perfumeRepository.findById(id).get();
+    }
+
+    public Optional<Perfume> getPerfumeByIdOpt(Long id){
+        return perfumeRepository.findById(id);
     }
 
     public void addPerfume(Perfume perfume) {
