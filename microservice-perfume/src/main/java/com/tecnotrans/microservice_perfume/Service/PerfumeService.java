@@ -26,15 +26,16 @@ public class PerfumeService {
         return perfumeRepository.findById(id);
     }
 
-    public void addPerfume(Perfume perfume) {
+    public Perfume addPerfume(Perfume perfume) {
         perfumeRepository.save(perfume);
+        return perfume;
     }
 
     public void updateBook(Perfume perfume) {
         perfumeRepository.save(perfume);
     }
 
-    public void deleteBookById(Long id) {
+    public void deletePerfumeById(Long id) {
         perfumeRepository.deleteById(id);
     }
 }

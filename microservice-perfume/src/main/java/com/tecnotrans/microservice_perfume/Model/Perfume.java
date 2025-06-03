@@ -10,8 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity//Le indico con el decorador que este sera el id de mi tabla
-@Table(name = "PERFUME")//Con esto le digo que sera autoincrementable
+@Entity
+@Table(name = "PERFUME")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,7 +21,7 @@ public class Perfume {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "NAME")
+    @Column(name = "NAME", length = 40, nullable = false)
     private String name;
     
     @Column(name = "STOCK")
@@ -30,6 +30,6 @@ public class Perfume {
     @Column(name = "PRICE")
     private float price;
     
-    @Column(name = "BRAND")
+    @Column(name = "BRAND", length = 40, nullable = false)
     private String brand;
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -83,16 +84,14 @@ public class PerfumeController {
         perfume.setPrice(perfumeDTO.getPrice());
         perfume.setBrand(perfumeDTO.getBrand());
 
-        perfumeService.addPerfume(perfume);
-        //Por que se crea una copia del paciente que ya se creo? En vez de ocupar directamente el ya creado
-        //Paciente pacienteGuardado = pacienteService.save(paciente);
+        Perfume perfumeSaved = perfumeService.addPerfume(perfume);
 
         PerfumeDTO dto = new PerfumeDTO();
-        dto.setId(perfume.getId());
-        dto.setName(perfume.getName());
-        dto.setStock(perfume.getStock());
-        dto.setPrice(perfume.getPrice());
-        dto.setBrand(perfume.getBrand());
+        dto.setId(perfumeSaved.getId());
+        dto.setName(perfumeSaved.getName());
+        dto.setStock(perfumeSaved.getStock());
+        dto.setPrice(perfumeSaved.getPrice());
+        dto.setBrand(perfumeSaved.getBrand());
 
         URI location = ServletUriComponentsBuilder
             .fromCurrentRequest()
@@ -121,27 +120,29 @@ public class PerfumeController {
             perfume.setPrice(perfumeDTO.getPrice());
             perfume.setBrand(perfumeDTO.getBrand());
 
-            perfumeService.addPerfume(perfume);
+            Perfume perfumeUpdated = perfumeService.addPerfume(perfume);
 
             PerfumeDTO dto = new PerfumeDTO();
-            dto.setId(perfume.getId());
-            dto.setName(perfume.getName());
-            dto.setStock(perfume.getStock());
-            dto.setPrice(perfume.getPrice());
-            dto.setBrand(perfume.getBrand());
+            dto.setId(perfumeUpdated.getId());
+            dto.setName(perfumeUpdated.getName());
+            dto.setStock(perfumeUpdated.getStock());
+            dto.setPrice(perfumeUpdated.getPrice());
+            dto.setBrand(perfumeUpdated.getBrand());
 
             return ResponseEntity.ok(dto);
+
         } catch(Exception e){
             return ResponseEntity.notFound().build();
         }
     }
 
-    //TODO eliminar
-
-    //TODOOOOOOOOOO
-    //localhost:8090/api/v1/student/search-by-course/1
-    //@GetMapping("/search-by-course/{courseId}")
-    //public ResponseEntity<?> findByIdCourse(@PathVariable Long courseId){         
-    //     return ResponseEntity.ok(perfumeService.findByIdCourse(courseId));
-    //}
+    @DeleteMapping("/id")
+    public ResponseEntity<?> delete(@PathVariable Long id){
+        try{
+            perfumeService.deletePerfumeById(id);
+            return ResponseEntity.noContent().build();
+        } catch(Exception e){
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
