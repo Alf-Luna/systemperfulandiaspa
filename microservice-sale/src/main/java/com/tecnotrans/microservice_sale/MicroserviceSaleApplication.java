@@ -1,13 +1,13 @@
-package com.tecnotrans.microservice_venta;
+package com.tecnotrans.microservice_sale;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MicroserviceVentaApplication {
+public class MicroserviceSaleApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MicroserviceVentaApplication.class, args);
+		SpringApplication.run(MicroserviceSaleApplication.class, args);
 	}
 
 }

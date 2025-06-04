@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -27,24 +28,17 @@ import com.tecnotrans.microservice_perfume.dto.PerfumeDTO;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping("api/v1/perfumes")
 public class PerfumeController {
     
     @Autowired
     private PerfumeService perfumeService;
-    
-    @PostMapping("/create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void savePerfume(@RequestBody Perfume perfume){
-        perfumeService.addPerfume(perfume);
-    }
 
-    @GetMapping("/all")
+    @GetMapping("/listAll")
     public ResponseEntity<?> getPerfumes(){
         return ResponseEntity.ok(perfumeService.getPerfumes());
     }
-    
-
+        
     @GetMapping("/search/{id}")    
     public ResponseEntity<?> getById(@PathVariable Long id){
         Optional<Perfume> perfume = perfumeService.getPerfumeByIdOpt(id);    
@@ -74,6 +68,12 @@ public class PerfumeController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(errorBody);
         }
+    }
+
+    @PostMapping("/create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void savePerfume(@RequestBody Perfume perfume){
+        perfumeService.addPerfume(perfume);
     }
 
     @PostMapping
@@ -112,7 +112,7 @@ public class PerfumeController {
 
     }
 
-    @GetMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<PerfumeDTO> update(@PathVariable Long id, @RequestBody PerfumeDTO perfumeDTO){
         try{
             Perfume perfume = new Perfume();
@@ -138,7 +138,7 @@ public class PerfumeController {
         }
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){
         try{
             perfumeService.deletePerfumeById(id);

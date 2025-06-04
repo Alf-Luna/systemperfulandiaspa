@@ -1,4 +1,4 @@
-package com.tecnotrans.microservice_venta.Model;
+package com.tecnotrans.microservice_sale.Model;
 
 import java.util.Date;
 
