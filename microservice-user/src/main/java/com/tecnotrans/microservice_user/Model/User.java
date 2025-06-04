@@ -30,5 +30,4 @@ private String phoneNumber;
 
 @Column(name = "EMAIL", nullable = false, unique = true)
 private String email;
-
 }

@@ -1,0 +1,37 @@
+package com.tecnotrans.microservice_venta.Model;
+
+import java.util.Date;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Entity
+@Table(name="SALE")
+@AllArgsConstructor
+@NoArgsConstructor
+public class Sale {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "DATE", nullable = false)
+    private Date date;
+
+    @Column(name = "QUANTITY", nullable = false)
+    private int qty;
+    
+    @Column(name = "ID_PERFUME", nullable = false)
+    private Long idPerfume;
+
+    @Column(name = "ID_USER", nullable = false)
+    private Long idUser;
+}
