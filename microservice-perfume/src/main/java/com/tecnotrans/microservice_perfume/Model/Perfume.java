@@ -19,7 +19,7 @@ public class Perfume {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "NAME", length = 40, nullable = false)
     private String name;

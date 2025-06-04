@@ -6,13 +6,13 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/perfume_db
-   username: root
-   password:
- jpa:
+    username: root
+    password:
+  jpa:
    hibernate:
      ddl-auto: update
    database: mysql
-   database-plataform: org.hibernate.dialect.MySQL8Dialect 
+   database-platform: org.hibernate.dialect.MySQL8Dialect 
 eureka:
   instance:
     hostname: localhost

@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class PerfumeDTO {
 
-    private long id;
+    private Long id;
     private String name;
     private int stock;
     private float price;

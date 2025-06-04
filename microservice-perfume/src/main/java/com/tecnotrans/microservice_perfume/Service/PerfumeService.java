@@ -31,7 +31,7 @@ public class PerfumeService {
         return perfume;
     }
 
-    public void updateBook(Perfume perfume) {
+    public void updatePerfume(Perfume perfume) {
         perfumeRepository.save(perfume);
     }
 
