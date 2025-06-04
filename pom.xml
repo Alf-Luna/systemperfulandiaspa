@@ -10,7 +10,7 @@
     <module>microservice-gateway</module>
     <module>microservice-perfume</module>
     <module>microservice-user</module>
-    <module>microservice-venta</module>
+    <module>microservice-sale</module>
   </modules>
 
   <groupId>com.tecnotrans.perfulandiaspa</groupId>

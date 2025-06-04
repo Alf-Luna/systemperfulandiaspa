@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -32,18 +33,11 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    
-    @PostMapping("/create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void saveUser(@RequestBody User user){
-        userService.addUser(user);
-    }
 
-    @GetMapping("/all")
+    @GetMapping("/listAll")
     public ResponseEntity<?> getUsers(){
         return ResponseEntity.ok(userService.getUsers());
     }
-    
 
     @GetMapping("/search/{id}")    
     public ResponseEntity<?> getById(@PathVariable Long id){
@@ -73,6 +67,12 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(errorBody);
         }
+    }
+
+    @PostMapping("/create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void saveUser(@RequestBody User user){
+        userService.addUser(user);
     }
 
     @PostMapping
@@ -107,7 +107,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }}//Error 409
 
-    @GetMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<UserDTO> update(@PathVariable Long id, @RequestBody UserDTO userDTO){
         try{
             User user = new User();
