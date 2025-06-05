@@ -11,5 +11,5 @@ import com.tecnotrans.microservice_sale.dto.PerfumeDTO;
 public interface PerfumeClient {
 
     @GetMapping("/api/v1/perfume/access-perfume-by-id/{id}")
-    PerfumeDTO accessPerfumeById(@PathVariable Long id);
+    PerfumeDTO accessPerfumeById(@PathVariable("id") Long id);
 }

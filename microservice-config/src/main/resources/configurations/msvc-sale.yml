@@ -6,7 +6,7 @@ spring:
     name: msvc-sale
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/sale_db
+    url: jdbc:mysql://localhost:3306/perfulandia_db
     username: root
     password: 
   jpa:

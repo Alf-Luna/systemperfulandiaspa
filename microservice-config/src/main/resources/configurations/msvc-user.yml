@@ -6,7 +6,7 @@ spring:
     name: msvc-user
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/user_db
+    url: jdbc:mysql://localhost:3306/perfulandia_db
     username: root
     password:
   jpa:
