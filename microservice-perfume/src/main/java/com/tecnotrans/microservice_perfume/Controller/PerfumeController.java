@@ -139,7 +139,7 @@ public class PerfumeController {
 
     //localhost:8090/api/v1/perfumes/search-by-course
     @GetMapping("/access-perfume-by-id/{id}")
-    public ResponseEntity<?> findByIdCourse(@PathVariable Long id){         
+    public ResponseEntity<?> getPerfumeById(@PathVariable Long id){         
         return ResponseEntity.ok(perfumeService.getPerfumeById(id));
     }
 }
