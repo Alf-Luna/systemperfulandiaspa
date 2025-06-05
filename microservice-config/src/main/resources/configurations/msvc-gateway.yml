@@ -10,14 +10,18 @@ spring:
         locator:
           enabled: true
       routes:
-        - id: pacientes
+        - id: perfumes
           uri: http://localhost:8090
           predicates:             
-            - Path=/api/v1/pacientes/**
-        - id: atenciones
+            - Path=/api/v1/perfumes/**
+        - id: sales
           uri: http://localhost:9090
           predicates:
-            - Path=/api/v1/atenciones/**
+            - Path=/api/v1/sales/**
+          - id: users
+          uri: http://localhost:9080
+          predicates:
+            - Path=/api/v1/users/**
 
 eureka:
   cliente:
