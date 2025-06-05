@@ -3,13 +3,17 @@ package com.tecnotrans.microservice_sale.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tecnotrans.microservice_sale.Client.PerfumeClient;
 ///import com.microservice.sale.client.PerfumeClient; Esto aún no existe en nuestro proyecto
 ///mport com.microservice.course.dto.StudentDTO;
 ///import com.microservice.course.http.response.StudentByCourseResponse;
 import com.tecnotrans.microservice_sale.Model.Sale;
 import com.tecnotrans.microservice_sale.Repository.ISaleRepository;
+import com.tecnotrans.microservice_sale.dto.PerfumeDTO;
+import com.tecnotrans.microservice_sale.http.Response.AccessPerfumeByIdResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SaleServiceImpl implements ISaleService{
@@ -17,8 +21,8 @@ public class SaleServiceImpl implements ISaleService{
     @Autowired
     private ISaleRepository iSaleRepository;
 
-    /*@Autowired
-    private StudentClient studentClient; no tenemos un equivalente a esto. Hay que hacer un clinete y utilizar OpenFeing*/
+    @Autowired
+    private PerfumeClient perfumeClient; 
 
     @Override
     public List<Sale> findAll() {
@@ -30,9 +34,13 @@ public class SaleServiceImpl implements ISaleService{
         return iSaleRepository.findById(id).orElseThrow();
     }
 
+    public Optional<Sale> findByIdOpt(Long id){
+        return iSaleRepository.findById(id);
+    }
+
     @Override
-    public void save(Sale sale) {
-        iSaleRepository.save(sale);
+    public Sale save(Sale sale) {
+        return iSaleRepository.save(sale);
     }
 
     @Override
@@ -40,25 +48,13 @@ public class SaleServiceImpl implements ISaleService{
         iSaleRepository.deleteById(id);
     }
 
-    /*@Override
-    public StudentByCourseResponse findStudentsByIdCourse(Long idCourse){
+    @Override
+    public AccessPerfumeByIdResponse accessPerfumeById(Long idPerfume){
+        PerfumeDTO perfumeDTO = perfumeClient.accessPerfumeById(idPerfume);
 
-
-        //Consultar el curso
-        //Porque devuelve un optional
-        Course course = iCourseRepository.findById(idCourse).orElse(new Course());
-
-        //Obtener los estudiantes que estan en el curso obtenido
-        List<StudentDTO> studentDTOList = studentClient.findAllStudentByCourse(idCourse);
-
-
-        return StudentByCourseResponse.builder()
-                .courseName(course.getName())
-                .teacher(course.getTeacher())
-                .studentDTOList(studentDTOList)
+        return AccessPerfumeByIdResponse.builder()
+                .perfumeName(perfumeDTO.getName())
+                .stock(perfumeDTO.getStock())
                 .build();
-    }*/ 
-    
-    ///Aun no tenemos un equivalente para esto
-
+    }
 }

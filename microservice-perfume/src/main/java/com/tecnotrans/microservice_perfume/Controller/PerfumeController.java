@@ -44,16 +44,6 @@ public class PerfumeController {
         Optional<Perfume> perfume = perfumeService.getPerfumeByIdOpt(id);    
         
         if(perfume.isPresent()){
-
-            //Preguntarle al profe porque se crea este dto si no se ocupa en ninguna parte.
-            //Quizas se deberia poner en el body del return?
-            PerfumeDTO dto = new PerfumeDTO();
-            dto.setId(perfume.get().getId());
-            dto.setName(perfume.get().getName());
-            dto.setStock(perfume.get().getStock());
-            dto.setPrice(perfume.get().getPrice());
-            dto.setBrand(perfume.get().getBrand());
-
             return ResponseEntity.ok()
                         .header("mi-encabezado","valor")
                         .body(perfume.get());
@@ -70,13 +60,13 @@ public class PerfumeController {
         }
     }
 
-    @PostMapping("/create")
+    
     @ResponseStatus(HttpStatus.CREATED)
     public void savePerfume(@RequestBody Perfume perfume){
         perfumeService.addPerfume(perfume);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<?> save(@Valid @RequestBody PerfumeDTO perfumeDTO){
         try{  
         Perfume perfume = new Perfume();
@@ -109,7 +99,6 @@ public class PerfumeController {
             error.put("message","El email ya está registrado");
             return ResponseEntity.status(HttpStatus.CONFLICT).body(error);//Error 409
         }
-
     }
 
     @PutMapping("/{id}")
@@ -146,5 +135,11 @@ public class PerfumeController {
         } catch(Exception e){
             return ResponseEntity.notFound().build();
         }
+    }
+
+    //localhost:8090/api/v1/perfumes/search-by-course
+    @GetMapping("/access-perfume-by-id/{id}")
+    public ResponseEntity<?> findByIdCourse(@PathVariable Long id){         
+        return ResponseEntity.ok(perfumeService.getPerfumeById(id));
     }
 }

@@ -10,15 +10,17 @@ import com.tecnotrans.microservice_user.Model.User;
 import com.tecnotrans.microservice_user.Repository.UserRepository;
 
 @Service
-public class UserService {
+public class UserService implements IUserService{
 
 @Autowired
     UserRepository userRepository;
 
+    @Override
     public List<User> getUsers(){
         return userRepository.findAll();
     }
 
+    @Override
     public User getUserById(Long id){
         return userRepository.findById(id).get();
     }
@@ -27,6 +29,7 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    @Override
     public User addUser(User user) {
         userRepository.save(user);
         return user;
@@ -38,6 +41,12 @@ public class UserService {
 
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public List<User> findByIdCourse(Long idCourse) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findByIdCourse'");
     }
 
 }

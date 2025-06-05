@@ -44,15 +44,6 @@ public class UserController {
         Optional<User> user = userService.getUserByIdOpt(id);    
         
         if(user.isPresent()){
-
-            //Preguntarle al profe porque se crea este dto si no se ocupa en ninguna parte.
-            //Quizas se deberia poner en el body del return?
-            UserDTO dto = new UserDTO();
-            dto.setUserId(user.get().getUserId());
-            dto.setName(user.get().getName());
-            dto.setPhoneNumber(user.get().getPhoneNumber());
-            dto.setEmail(user.get().getEmail());
-
             return ResponseEntity.ok()
                         .header("mi-encabezado","valor")
                         .body(user.get());
