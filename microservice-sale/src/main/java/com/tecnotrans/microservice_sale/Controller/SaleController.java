@@ -37,6 +37,9 @@ public class SaleController {
     @Autowired
     private SaleServiceImpl saleService;
 
+    @Autowired
+    private ISaleService iSaleService;
+
     @GetMapping("/listAll")
     public ResponseEntity<?> findAllSales() {
         return ResponseEntity.ok(saleService.findAll());
@@ -131,10 +134,13 @@ public class SaleController {
         return "Eliminado";
     }
 
-    /*@GetMapping("/search-student/{idCourse}")
-    public ResponseEntity<?> findStudentsByIdCourse(@PathVariable Long idCourse){
-        return ResponseEntity.ok(courseService.findStudentsByIdCourse(idCourse));
-    } */ ///aún no tenemos un equivalente para esto
+    @GetMapping("/perfumeid/{idCourse}")
+    public ResponseEntity<?> getPerById(@PathVariable Long id){
+        return ResponseEntity.ok(iSaleService.accessPerfumeById(id));
+    }
 
-
+    @GetMapping("/numero/{id}")
+    public int giveMeYourNummerBBY(@PathVariable int id){
+        return saleService.nummer(id);
+    }
 }

@@ -57,4 +57,8 @@ public class SaleServiceImpl implements ISaleService{
                 .stock(perfumeDTO.getStock())
                 .build();
     }
+
+    public int nummer(int id){
+        return perfumeClient.dameUnNumero(id);
+    }
 }

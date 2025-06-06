@@ -10,6 +10,9 @@ import com.tecnotrans.microservice_sale.dto.PerfumeDTO;
 @FeignClient(name = "msvc-perfume", url = "localhost:8090")
 public interface PerfumeClient {
 
-    @GetMapping("/api/v1/perfume/access-perfume-by-id/{id}")
-    PerfumeDTO accessPerfumeById(@PathVariable("id") Long id);
+    @GetMapping("/api/v1/perfumes/access-perfume-by-id/{id}")
+    PerfumeDTO accessPerfumeById(@PathVariable Long id);
+
+    @GetMapping("/api/v1/perfumes/dameunnumero/{id}")
+    int dameUnNumero(@PathVariable int id);
 }

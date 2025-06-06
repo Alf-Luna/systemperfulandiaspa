@@ -42,4 +42,10 @@ public class PerfumeService implements IPerfumeService{
         perfumeRepository.deleteById(id);
     }
 
+    @Override
+    public Perfume accessPerfume(Long id) {
+        return getPerfumeById(id);
+    }
+
+    //dame un numero
 }

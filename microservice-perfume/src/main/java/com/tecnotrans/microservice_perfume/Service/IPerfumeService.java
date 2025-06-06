@@ -11,4 +11,5 @@ public interface IPerfumeService {
     
     Perfume addPerfume(Perfume perfume);
 
+    Perfume accessPerfume(Long id);
 }

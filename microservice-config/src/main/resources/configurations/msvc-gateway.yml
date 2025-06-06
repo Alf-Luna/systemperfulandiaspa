@@ -18,12 +18,14 @@ spring:
           uri: http://localhost:9090
           predicates:
             - Path=/api/v1/sales/**
-          - id: users
+        - id: users
           uri: http://localhost:9080
           predicates:
             - Path=/api/v1/users/**
 
 eureka:
-  cliente:
-    register-with-eureka: false
+  client:
+    register-with-eureka: true
     fetch-registry: false
+
+    

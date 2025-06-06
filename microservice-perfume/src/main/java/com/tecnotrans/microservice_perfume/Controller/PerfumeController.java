@@ -142,4 +142,9 @@ public class PerfumeController {
     public ResponseEntity<?> getPerfumeById(@PathVariable Long id){         
         return ResponseEntity.ok(perfumeService.getPerfumeById(id));
     }
+
+    @GetMapping("/dameunnumero/{id}")
+    public int dameUnNumero(@PathVariable int id){
+        return id + 1;
+    }
 }
