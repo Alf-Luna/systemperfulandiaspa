@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -150,13 +151,15 @@ public class PerfumeController {
 
     @GetMapping("/darPefume/{id}")
     public ResponseEntity<?> darPerfume(@PathVariable Long id){
+        System.out.println("ejecutado dar perfume");
         return ResponseEntity.ok(perfumeService.getPerfumeById(id));
     }
 
-    @PutMapping("/adjustStock/{id}")
-    public void adjustStock(@PathVariable Long id, int stockToAdjust){
+    @PostMapping("/adjustStock/{id}")
+    public void adjustStock(@PathVariable Long id, @RequestParam("substract") Integer substract){
+        System.out.println("++++++++STOCK TO ADJUST = " + substract);
         Perfume perfume1 = perfumeService.getPerfumeById(id);
-        perfume1.setStock(perfume1.getStock() - stockToAdjust);
+        perfume1.setStock(perfume1.getStock() - substract);
         perfumeService.addPerfume(perfume1);
     }
 }

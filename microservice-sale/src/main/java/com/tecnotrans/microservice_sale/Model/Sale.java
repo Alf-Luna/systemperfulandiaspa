@@ -1,5 +1,6 @@
 package com.tecnotrans.microservice_sale.Model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import jakarta.persistence.Column;
@@ -23,8 +24,8 @@ public class Sale {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "DATE", nullable = false)
-    private Date date;
+    @Column(name = "DATE")
+    private LocalDateTime date;
 
     @Column(name = "QUANTITY", nullable = false)
     private int qty;

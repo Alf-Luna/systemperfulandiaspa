@@ -63,10 +63,12 @@ public class SaleServiceImpl implements ISaleService{
     }
 
     public PerfumeDTO dameUnPerfume(Long id){
+        System.out.println("dame un perfume saleservice");
         return perfumeClient.dameUnPerfume(id);
     }
 
-    public void updateStockDueToSale(Long id, int stockToRemove){
-        perfumeClient.updateStockDueToSale(id, stockToRemove);
+    public void updateStockDueToSale(Long id, Integer substract){
+        System.out.println("Sale service start. Subtract = " + substract);
+        perfumeClient.updateStockDueToSale(id, substract);
     }
 }

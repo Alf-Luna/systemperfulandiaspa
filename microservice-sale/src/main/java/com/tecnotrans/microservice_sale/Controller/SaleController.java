@@ -9,6 +9,7 @@ import com.tecnotrans.microservice_sale.dto.SaleDTO;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -151,18 +152,21 @@ public class SaleController {
         try{  
         Sale sale = new Sale();
         sale.setId(saleDTO.getId());
-        sale.setDate(saleDTO.getDate());
+        sale.setDate(java.time.LocalDateTime.now());
         sale.setQty(saleDTO.getQty());
         sale.setIdPerfume(saleDTO.getIdPerfume());
         sale.setIdUser(saleDTO.getIdUser());
+        System.out.println("Sale GETQTY = " + sale.getQty());
 
         try{
             //obterner stokc
             PerfumeDTO perfumeToBuy = saleService.dameUnPerfume(sale.getIdPerfume());
+            System.out.println("Creado perfumetobuy exitosamente");
             if (sale.getQty() <= perfumeToBuy.getStock()){
+                System.out.println("Checking if stock is sufficient");
                 //hay stock
                 //Actualizar stock
-                saleService.updateStockDueToSale(sale.getId(), sale.getQty());
+                saleService.updateStockDueToSale(sale.getIdPerfume(), sale.getQty());
             } else{
                 //no hay stock
                 Map<String,String> error = new HashMap<>();
