@@ -4,6 +4,7 @@ package com.tecnotrans.microservice_sale.Controller;
 import com.tecnotrans.microservice_sale.Model.Sale;
 import com.tecnotrans.microservice_sale.Service.ISaleService;
 import com.tecnotrans.microservice_sale.Service.SaleServiceImpl;
+import com.tecnotrans.microservice_sale.dto.PerfumeDTO;
 import com.tecnotrans.microservice_sale.dto.SaleDTO;
 
 import java.net.URI;
@@ -143,4 +144,67 @@ public class SaleController {
     public int giveMeYourNummerBBY(@PathVariable int id){
         return saleService.nummer(id);
     }
+
+    @PostMapping("/makeSale")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> makeSale(@RequestBody SaleDTO saleDTO){
+        try{  
+        Sale sale = new Sale();
+        sale.setId(saleDTO.getId());
+        sale.setDate(saleDTO.getDate());
+        sale.setQty(saleDTO.getQty());
+        sale.setIdPerfume(saleDTO.getIdPerfume());
+        sale.setIdUser(saleDTO.getIdUser());
+
+        try{
+            //obterner stokc
+            PerfumeDTO perfumeToBuy = saleService.dameUnPerfume(sale.getIdPerfume());
+            if (sale.getQty() <= perfumeToBuy.getStock()){
+                //hay stock
+                //Actualizar stock
+                saleService.updateStockDueToSale(sale.getId(), sale.getQty());
+            } else{
+                //no hay stock
+                Map<String,String> error = new HashMap<>();
+                error.put("message","No hay stock suficiente para completar su compra");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+            }
+
+        } catch(Exception e){
+            Map<String,String> error = new HashMap<>();
+            error.put("message","No se ha encontrado un perufme valido");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }
+
+        Sale perfumeSaved = saleService.save(sale);
+
+        SaleDTO dto = new SaleDTO();
+        dto.setId(perfumeSaved.getId());
+        dto.setDate(perfumeSaved.getDate());
+        dto.setQty(perfumeSaved.getQty());
+        dto.setIdPerfume(perfumeSaved.getIdPerfume());
+        dto.setIdUser(perfumeSaved.getIdUser());
+
+        URI location = ServletUriComponentsBuilder
+            .fromCurrentRequest()
+            .path("/{id}")
+            .buildAndExpand(sale.getId())
+            .toUri();
+
+        return ResponseEntity.created(location).body(dto);
+        }
+        catch(DataIntegrityViolationException e){
+            //Ejemplo: Error si hay un campo único duplicado (ej: email repetido)
+            Map<String,String> error = new HashMap<>();
+            error.put("message","El email ya está registrado");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(error);//Error 409
+        }
+    }
+
+    /*@GetMapping("dameUnPefume/{id}")
+    public PerfumeDTO dameUnPerfume(@PathVariable Long id){
+        
+        PerfumeDTO perfumeToBuy = saleService.dameUnPerfume(id);
+        int stock = perfumeToBuy.getStock();
+    }*/
 }

@@ -147,4 +147,16 @@ public class PerfumeController {
     public int dameUnNumero(@PathVariable int id){
         return id + 1;
     }
+
+    @GetMapping("/darPefume/{id}")
+    public ResponseEntity<?> darPerfume(@PathVariable Long id){
+        return ResponseEntity.ok(perfumeService.getPerfumeById(id));
+    }
+
+    @PutMapping("/adjustStock/{id}")
+    public void adjustStock(@PathVariable Long id, int stockToAdjust){
+        Perfume perfume1 = perfumeService.getPerfumeById(id);
+        perfume1.setStock(perfume1.getStock() - stockToAdjust);
+        perfumeService.addPerfume(perfume1);
+    }
 }

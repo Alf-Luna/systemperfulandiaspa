@@ -61,4 +61,12 @@ public class SaleServiceImpl implements ISaleService{
     public int nummer(int id){
         return perfumeClient.dameUnNumero(id);
     }
+
+    public PerfumeDTO dameUnPerfume(Long id){
+        return perfumeClient.dameUnPerfume(id);
+    }
+
+    public void updateStockDueToSale(Long id, int stockToRemove){
+        perfumeClient.updateStockDueToSale(id, stockToRemove);
+    }
 }
