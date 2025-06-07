@@ -1,11 +1,9 @@
 package com.tecnotrans.microservice_sale.Service;
 
 import com.tecnotrans.microservice_sale.Model.Sale;
-///import com.tecnotrans.microservice_sale.http.response.StudentByCourseResponse; /// no tenemos un equivalente a esto
 import com.tecnotrans.microservice_sale.http.Response.AccessPerfumeByIdResponse;
 
 import java.util.List;
-
 
 public interface ISaleService {
     
@@ -15,7 +13,7 @@ public interface ISaleService {
 
     Sale save(Sale course);
 
-    AccessPerfumeByIdResponse accessPerfumeById(Long idPerfume);
+    //AccessPerfumeByIdResponse accessPerfumeById(Long idPerfume);
 
     void deleteById(Long id);
 

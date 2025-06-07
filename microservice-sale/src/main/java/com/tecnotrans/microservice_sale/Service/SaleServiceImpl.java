@@ -5,13 +5,10 @@ import org.springframework.stereotype.Service;
 
 import com.tecnotrans.microservice_sale.Client.PerfumeClient;
 import com.tecnotrans.microservice_sale.Client.UserClient;
-///import com.microservice.sale.client.PerfumeClient; Esto aún no existe en nuestro proyecto
-///mport com.microservice.course.dto.StudentDTO;
-///import com.microservice.course.http.response.StudentByCourseResponse;
 import com.tecnotrans.microservice_sale.Model.Sale;
 import com.tecnotrans.microservice_sale.Repository.ISaleRepository;
 import com.tecnotrans.microservice_sale.dto.PerfumeDTO;
-import com.tecnotrans.microservice_sale.http.Response.AccessPerfumeByIdResponse;
+//import com.tecnotrans.microservice_sale.http.Response.AccessPerfumeByIdResponse;
 
 import java.util.List;
 import java.util.Optional;
@@ -52,7 +49,7 @@ public class SaleServiceImpl implements ISaleService{
         iSaleRepository.deleteById(id);
     }
 
-    @Override
+    /*@Override
     public AccessPerfumeByIdResponse accessPerfumeById(Long idPerfume){
         PerfumeDTO perfumeDTO = perfumeClient.accessPerfumeById(idPerfume);
 
@@ -60,11 +57,7 @@ public class SaleServiceImpl implements ISaleService{
                 .perfumeName(perfumeDTO.getName())
                 .stock(perfumeDTO.getStock())
                 .build();
-    }
-
-    public int nummer(int id){
-        return perfumeClient.dameUnNumero(id);
-    }
+    }*/
 
     public PerfumeDTO dameUnPerfume(Long id){
         System.out.println("dame un perfume saleservice");

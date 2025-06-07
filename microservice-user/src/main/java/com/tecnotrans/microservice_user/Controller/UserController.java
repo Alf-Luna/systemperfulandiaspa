@@ -60,12 +60,6 @@ public class UserController {
         }
     }
 
-    @PostMapping("/create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void saveUser(@RequestBody User user){
-        userService.addUser(user);
-    }
-
     @PostMapping
     public ResponseEntity<?> save(@Valid @RequestBody UserDTO userDTO){
         try{  
@@ -136,5 +130,4 @@ public class UserController {
     public boolean validateUser(@PathVariable long id){
         return userService.validateUser(id);
     }
-
 }

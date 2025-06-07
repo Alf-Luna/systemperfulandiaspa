@@ -70,35 +70,33 @@ public class PerfumeController {
     @PostMapping("/create")
     public ResponseEntity<?> save(@Valid @RequestBody PerfumeDTO perfumeDTO){
         try{  
-        Perfume perfume = new Perfume();
-        perfume.setId(perfumeDTO.getId());
-        perfume.setName(perfumeDTO.getName());
-        perfume.setStock(perfumeDTO.getStock());
-        perfume.setPrice(perfumeDTO.getPrice());
-        perfume.setBrand(perfumeDTO.getBrand());
+            Perfume perfume = new Perfume();
+            perfume.setId(perfumeDTO.getId());
+            perfume.setName(perfumeDTO.getName());
+            perfume.setStock(perfumeDTO.getStock());
+            perfume.setPrice(perfumeDTO.getPrice());
+            perfume.setBrand(perfumeDTO.getBrand());
 
-        Perfume perfumeSaved = perfumeService.addPerfume(perfume);
+            Perfume perfumeSaved = perfumeService.addPerfume(perfume);
 
-        PerfumeDTO dto = new PerfumeDTO();
-        dto.setId(perfumeSaved.getId());
-        dto.setName(perfumeSaved.getName());
-        dto.setStock(perfumeSaved.getStock());
-        dto.setPrice(perfumeSaved.getPrice());
-        dto.setBrand(perfumeSaved.getBrand());
+            PerfumeDTO dto = new PerfumeDTO();
+            dto.setId(perfumeSaved.getId());
+            dto.setName(perfumeSaved.getName());
+            dto.setStock(perfumeSaved.getStock());
+            dto.setPrice(perfumeSaved.getPrice());
+            dto.setBrand(perfumeSaved.getBrand());
 
-        URI location = ServletUriComponentsBuilder
-            .fromCurrentRequest()
-            .path("/{id}")
-            .buildAndExpand(perfume.getId())
-            .toUri();
+            URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(perfume.getId())
+                .toUri();
 
-        return ResponseEntity.created(location).body(dto);
-        }
-        catch(DataIntegrityViolationException e){
-            //Ejemplo: Error si hay un campo único duplicado (ej: email repetido)
+            return ResponseEntity.created(location).body(dto);
+        } catch(DataIntegrityViolationException e){
             Map<String,String> error = new HashMap<>();
             error.put("message","El email ya está registrado");
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(error);//Error 409
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
         }
     }
 
@@ -128,7 +126,7 @@ public class PerfumeController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){
         try{
             perfumeService.deletePerfumeById(id);
@@ -138,16 +136,10 @@ public class PerfumeController {
         }
     }
 
-    //localhost:8090/api/v1/perfumes/search-by-course
-    @GetMapping("/access-perfume-by-id/{id}")
+    /*@GetMapping("/access-perfume-by-id/{id}")
     public ResponseEntity<?> getPerfumeById(@PathVariable Long id){         
         return ResponseEntity.ok(perfumeService.getPerfumeById(id));
-    }
-
-    @GetMapping("/dameunnumero/{id}")
-    public int dameUnNumero(@PathVariable int id){
-        return id + 1;
-    }
+    }*/
 
     @GetMapping("/darPefume/{id}")
     public ResponseEntity<?> darPerfume(@PathVariable Long id){
@@ -157,7 +149,7 @@ public class PerfumeController {
 
     @PostMapping("/adjustStock/{id}")
     public void adjustStock(@PathVariable Long id, @RequestParam("substract") Integer substract){
-        System.out.println("++++++++STOCK TO ADJUST = " + substract);
+        System.out.println("STOCK TO ADJUST = " + substract);
         Perfume perfume1 = perfumeService.getPerfumeById(id);
         perfume1.setStock(perfume1.getStock() - substract);
         perfumeService.addPerfume(perfume1);

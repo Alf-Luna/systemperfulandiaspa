@@ -1,8 +1,6 @@
 package com.tecnotrans.microservice_sale.Controller;
 
-///import com.netflix.discovery.converters.Auto;
 import com.tecnotrans.microservice_sale.Model.Sale;
-import com.tecnotrans.microservice_sale.Service.ISaleService;
 import com.tecnotrans.microservice_sale.Service.SaleServiceImpl;
 import com.tecnotrans.microservice_sale.dto.PerfumeDTO;
 import com.tecnotrans.microservice_sale.dto.SaleDTO;
@@ -27,7 +25,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
-///import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -37,9 +34,6 @@ public class SaleController {
 
     @Autowired
     private SaleServiceImpl saleService;
-
-    @Autowired
-    private ISaleService iSaleService;
 
     @GetMapping("/listAll")
     public ResponseEntity<?> findAllSales() {
@@ -67,6 +61,7 @@ public class SaleController {
         }
     }
     
+    //solo para agregar ventas realizadas previamente. No se deberia usar
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> save(@RequestBody SaleDTO saleDTO){
@@ -129,21 +124,16 @@ public class SaleController {
         }
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public String deleteById(@PathVariable Long id){
         saleService.deleteById(id);
         return "Eliminado";
     }
 
-    @GetMapping("/perfumeid/{idCourse}")
-    public ResponseEntity<?> getPerById(@PathVariable Long id){
+    /*@GetMapping("/perfumeid/{id}")
+    public ResponseEntity<?> getSaleById(@PathVariable Long id){
         return ResponseEntity.ok(iSaleService.accessPerfumeById(id));
-    }
-
-    @GetMapping("/numero/{id}")
-    public int giveMeYourNummerBBY(@PathVariable int id){
-        return saleService.nummer(id);
-    }
+    }*/
 
     @PostMapping("/makeSale")
     @ResponseStatus(HttpStatus.CREATED)
@@ -164,16 +154,12 @@ public class SaleController {
             }
 
             try{
-                //obterner stokc
                 PerfumeDTO perfumeToBuy = saleService.dameUnPerfume(sale.getIdPerfume());
                 System.out.println("Creado perfumetobuy exitosamente");
                 if (sale.getQty() <= perfumeToBuy.getStock()){
                     System.out.println("Checking if stock is sufficient");
-                    //hay stock
-                    //Actualizar stock
                     saleService.updateStockDueToSale(sale.getIdPerfume(), sale.getQty());
                 } else{
-                    //no hay stock
                     Map<String,String> error = new HashMap<>();
                     error.put("message","No hay stock suficiente para completar su compra");
                     return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
@@ -203,17 +189,9 @@ public class SaleController {
             return ResponseEntity.created(location).body(dto);
         }
         catch(DataIntegrityViolationException e){
-            //Ejemplo: Error si hay un campo único duplicado (ej: email repetido)
             Map<String,String> error = new HashMap<>();
             error.put("message","El email ya está registrado");
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(error);//Error 409
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
         }
     }
-
-    /*@GetMapping("dameUnPefume/{id}")
-    public PerfumeDTO dameUnPerfume(@PathVariable Long id){
-        
-        PerfumeDTO perfumeToBuy = saleService.dameUnPerfume(id);
-        int stock = perfumeToBuy.getStock();
-    }*/
 }
