@@ -1,7 +1,7 @@
 package com.tecnotrans.microservice_sale.Service;
 
 import com.tecnotrans.microservice_sale.Model.Sale;
-import com.tecnotrans.microservice_sale.http.Response.AccessPerfumeByIdResponse;
+//import com.tecnotrans.microservice_sale.http.Response.AccessPerfumeByIdResponse;
 
 import java.util.List;
 
