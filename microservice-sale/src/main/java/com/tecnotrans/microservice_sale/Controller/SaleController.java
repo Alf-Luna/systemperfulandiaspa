@@ -149,52 +149,58 @@ public class SaleController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> makeSale(@RequestBody SaleDTO saleDTO){
         try{  
-        Sale sale = new Sale();
-        sale.setId(saleDTO.getId());
-        sale.setDate(java.time.LocalDateTime.now());
-        sale.setQty(saleDTO.getQty());
-        sale.setIdPerfume(saleDTO.getIdPerfume());
-        sale.setIdUser(saleDTO.getIdUser());
-        System.out.println("Sale GETQTY = " + sale.getQty());
+            Sale sale = new Sale();
+            sale.setId(saleDTO.getId());
+            sale.setDate(java.time.LocalDateTime.now());
+            sale.setQty(saleDTO.getQty());
+            sale.setIdPerfume(saleDTO.getIdPerfume());
+            sale.setIdUser(saleDTO.getIdUser());
+            System.out.println("Sale GETQTY = " + sale.getQty());
 
-        try{
-            //obterner stokc
-            PerfumeDTO perfumeToBuy = saleService.dameUnPerfume(sale.getIdPerfume());
-            System.out.println("Creado perfumetobuy exitosamente");
-            if (sale.getQty() <= perfumeToBuy.getStock()){
-                System.out.println("Checking if stock is sufficient");
-                //hay stock
-                //Actualizar stock
-                saleService.updateStockDueToSale(sale.getIdPerfume(), sale.getQty());
-            } else{
-                //no hay stock
+            if (!saleService.validateUser(sale.getIdUser())){
                 Map<String,String> error = new HashMap<>();
-                error.put("message","No hay stock suficiente para completar su compra");
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+                error.put("message","No se ha encontrado un usuario valido");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
             }
 
-        } catch(Exception e){
-            Map<String,String> error = new HashMap<>();
-            error.put("message","No se ha encontrado un perufme valido");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-        }
+            try{
+                //obterner stokc
+                PerfumeDTO perfumeToBuy = saleService.dameUnPerfume(sale.getIdPerfume());
+                System.out.println("Creado perfumetobuy exitosamente");
+                if (sale.getQty() <= perfumeToBuy.getStock()){
+                    System.out.println("Checking if stock is sufficient");
+                    //hay stock
+                    //Actualizar stock
+                    saleService.updateStockDueToSale(sale.getIdPerfume(), sale.getQty());
+                } else{
+                    //no hay stock
+                    Map<String,String> error = new HashMap<>();
+                    error.put("message","No hay stock suficiente para completar su compra");
+                    return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+                }
 
-        Sale perfumeSaved = saleService.save(sale);
+            } catch(Exception e){
+                Map<String,String> error = new HashMap<>();
+                error.put("message","No se ha encontrado un perufme valido");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            }
 
-        SaleDTO dto = new SaleDTO();
-        dto.setId(perfumeSaved.getId());
-        dto.setDate(perfumeSaved.getDate());
-        dto.setQty(perfumeSaved.getQty());
-        dto.setIdPerfume(perfumeSaved.getIdPerfume());
-        dto.setIdUser(perfumeSaved.getIdUser());
+            Sale perfumeSaved = saleService.save(sale);
 
-        URI location = ServletUriComponentsBuilder
-            .fromCurrentRequest()
-            .path("/{id}")
-            .buildAndExpand(sale.getId())
-            .toUri();
+            SaleDTO dto = new SaleDTO();
+            dto.setId(perfumeSaved.getId());
+            dto.setDate(perfumeSaved.getDate());
+            dto.setQty(perfumeSaved.getQty());
+            dto.setIdPerfume(perfumeSaved.getIdPerfume());
+            dto.setIdUser(perfumeSaved.getIdUser());
 
-        return ResponseEntity.created(location).body(dto);
+            URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(sale.getId())
+                .toUri();
+
+            return ResponseEntity.created(location).body(dto);
         }
         catch(DataIntegrityViolationException e){
             //Ejemplo: Error si hay un campo único duplicado (ej: email repetido)

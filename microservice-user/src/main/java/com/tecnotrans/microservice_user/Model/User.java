@@ -25,7 +25,7 @@ private Long userId;
 @Column(name = "NAME", length = 40, nullable = false)
 private String name;
 
-@Column(name = "PHONE_NUMBER", nullable = false, unique = true)
+@Column(name = "PHONE_NUMBER", nullable = false)
 private String phoneNumber;
 
 @Column(name = "EMAIL", nullable = false, unique = true)

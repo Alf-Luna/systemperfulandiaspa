@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tecnotrans.microservice_sale.Client.PerfumeClient;
+import com.tecnotrans.microservice_sale.Client.UserClient;
 ///import com.microservice.sale.client.PerfumeClient; Esto aún no existe en nuestro proyecto
 ///mport com.microservice.course.dto.StudentDTO;
 ///import com.microservice.course.http.response.StudentByCourseResponse;
@@ -23,6 +24,9 @@ public class SaleServiceImpl implements ISaleService{
 
     @Autowired
     private PerfumeClient perfumeClient; 
+
+    @Autowired
+    private UserClient userClient;
 
     @Override
     public List<Sale> findAll() {
@@ -70,5 +74,9 @@ public class SaleServiceImpl implements ISaleService{
     public void updateStockDueToSale(Long id, Integer substract){
         System.out.println("Sale service start. Subtract = " + substract);
         perfumeClient.updateStockDueToSale(id, substract);
+    }
+
+    public boolean validateUser(Long idUser) {
+        return userClient.validateUser(idUser);
     }
 }

@@ -69,34 +69,34 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> save(@Valid @RequestBody UserDTO userDTO){
         try{  
-        User user = new User();
-        user.setUserId(userDTO.getUserId());
-        user.setName(userDTO.getName());
-        user.setPhoneNumber(userDTO.getPhoneNumber());
-        user.setEmail(userDTO.getEmail());
+            User user = new User();
+            user.setUserId(userDTO.getUserId());
+            user.setName(userDTO.getName());
+            user.setPhoneNumber(userDTO.getPhoneNumber());
+            user.setEmail(userDTO.getEmail());
 
-        User userSaved = userService.addUser(user);
+            User userSaved = userService.addUser(user);
 
-        UserDTO dto = new UserDTO();
-        dto.setUserId(userSaved.getUserId());
-        dto.setName(userSaved.getName());
-        dto.setPhoneNumber(userSaved.getPhoneNumber());
-        dto.setEmail(userSaved.getEmail());
+            UserDTO dto = new UserDTO();
+            dto.setUserId(userSaved.getUserId());
+            dto.setName(userSaved.getName());
+            dto.setPhoneNumber(userSaved.getPhoneNumber());
+            dto.setEmail(userSaved.getEmail());
 
-        URI location = ServletUriComponentsBuilder
-            .fromCurrentRequest()
-            .path("/{id}")
-            .buildAndExpand(user.getUserId())
-            .toUri();
+            URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(user.getUserId())
+                .toUri();
 
-        return ResponseEntity.created(location).body(dto);
-        }
-        catch(DataIntegrityViolationException e){
+            return ResponseEntity.created(location).body(dto);
+        } catch(DataIntegrityViolationException e){
             //Ejemplo: Error si hay un campo único duplicado (ej: email repetido)
             Map<String,String> error = new HashMap<>();
-            error.put("message","El email ya está registrado");
+            error.put("message","El correo ingresado ya esta en uso");
             return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
-    }}//Error 409
+        }
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<UserDTO> update(@PathVariable Long id, @RequestBody UserDTO userDTO){
@@ -130,6 +130,11 @@ public class UserController {
         } catch(Exception e){
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/validateuser/{id}")
+    public boolean validateUser(@PathVariable long id){
+        return userService.validateUser(id);
     }
 
 }

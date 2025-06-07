@@ -10,6 +10,4 @@ public interface IUserService {
     User getUserById(Long id);
     
     User addUser(User user);
-
-    List<User> findByIdCourse(Long idCourse);
 }
