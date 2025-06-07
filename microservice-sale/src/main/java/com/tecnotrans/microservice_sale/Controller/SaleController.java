@@ -156,8 +156,13 @@ public class SaleController {
             try{
                 PerfumeDTO perfumeToBuy = saleService.dameUnPerfume(sale.getIdPerfume());
                 System.out.println("Creado perfumetobuy exitosamente");
+                if (sale.getQty() < 1){
+                    Map<String,String> error = new HashMap<>();
+                    error.put("message","El stock ingresado es invalido");
+                    return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+                }
                 if (sale.getQty() <= perfumeToBuy.getStock()){
-                    System.out.println("Checking if stock is sufficient");
+                    System.out.println("Checked if stock is sufficient");
                     saleService.updateStockDueToSale(sale.getIdPerfume(), sale.getQty());
                 } else{
                     Map<String,String> error = new HashMap<>();

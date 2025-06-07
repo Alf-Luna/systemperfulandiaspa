@@ -115,8 +115,9 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){
+        System.out.println("received delete request");
         try{
             userService.deleteUserById(id);
             return ResponseEntity.noContent().build();
