@@ -1,0 +1,12 @@
+server:
+  port: 9080
+spring:
+  application:
+    name: msvc-user
+  config:
+    import: optional:configserver:http://localhost:8888
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/perfulandia_db
+    username: root
+    password:
