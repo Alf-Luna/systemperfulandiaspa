@@ -78,6 +78,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<version>3.3.12</version>
 		</dependency>
+		<dependency>
+			<groupId>net.datafaker</groupId>
+			<artifactId>datafaker</artifactId>
+			<version>2.3.0</version>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
