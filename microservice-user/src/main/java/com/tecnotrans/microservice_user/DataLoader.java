@@ -21,8 +21,12 @@ public class DataLoader implements CommandLineRunner{
 
         for (int i = 0; i < 11; i++){
             User user = new User();
-            user.setEmail(faker.name().firstName() + "." + faker.name().lastName() + "@mail.com");
-            user.setName(faker.name().fullName());
+
+            String firstName = faker.name().firstName();
+            String lastName = faker.name().lastName();
+
+            user.setName(firstName + " " + lastName);
+            user.setEmail(firstName.substring(0,1).toLowerCase() + "." + lastName.toLowerCase() + "@mail.com");
             user.setPhoneNumber(faker.phoneNumber().phoneNumberInternational());
             userRepository.save(user);
         }
