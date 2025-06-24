@@ -2,6 +2,8 @@ package com.tecnotrans.microservice_user;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -54,6 +56,20 @@ public class UserServiceTest {
     }
 
     @Test
+    public void getUserByIdOpt(){
+        Long code = 1l;
+        User user = createTestUser();
+
+        when(userRepository.findById(code)).thenReturn(Optional.of(user));
+
+        Optional<User> foundUser = userService.getUserByIdOpt(code);
+
+        assertNotNull(foundUser);
+        assertEquals(code, foundUser.get().getUserId());
+
+    };
+
+    @Test
     public void save(){
         User user = createTestUser();
 
@@ -66,6 +82,17 @@ public class UserServiceTest {
     }
 
     @Test
+    public void updateUser(){
+        User user = createTestUser();
+
+        when(userRepository.save(user)).thenReturn(user);
+
+        userService.updateUser(user);
+
+        verify(userRepository).save(user);
+    };
+
+    @Test
     public void deleteById(){
         Long codigo = 1l;
 
@@ -75,6 +102,29 @@ public class UserServiceTest {
 
         verify(userRepository, times(1)).deleteById(codigo);
     }
+
+    @Test
+    public void validateUser(){
+        Long code = 1l;
+        User user = createTestUser();
+
+        when(userRepository.findById(code)).thenReturn(Optional.of(user));
+
+        boolean foundUser = userService.validateUser(code);
+        
+        assertTrue(foundUser);
+    };
+
+    @Test
+    public void validateUserWhenFalse(){
+        Long code = 10l;
+
+        when(userRepository.findById(code)).thenReturn(Optional.empty());
+
+        boolean foundUser = userService.validateUser(code);
+        
+        assertFalse(foundUser);
+    };
 
     private User createTestUser() {
         return User.builder()

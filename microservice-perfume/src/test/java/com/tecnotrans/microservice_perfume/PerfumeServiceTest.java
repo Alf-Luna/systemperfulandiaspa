@@ -40,7 +40,7 @@ public class PerfumeServiceTest {
     }
 
     @Test
-    public void findByCode(){
+    public void findById(){
         Long code = 1l;
         Perfume perfume = createTestPerfume();
 
@@ -51,6 +51,20 @@ public class PerfumeServiceTest {
         assertNotNull(foundPerfume);
         assertEquals(code, foundPerfume.getId());
     }
+
+    @Test
+    public void getPerfumeByIdOpt(){
+        Long code = 1l;
+        Perfume perfume = createTestPerfume();
+
+        when(perfumeRepository.findById(code)).thenReturn(Optional.of(perfume));
+
+        Optional<Perfume> foundPerfume = perfumeService.getPerfumeByIdOpt(code);
+
+        assertNotNull(foundPerfume);
+        assertEquals(code, foundPerfume.get().getId());
+
+    };
 
     @Test
     public void save(){
@@ -65,6 +79,18 @@ public class PerfumeServiceTest {
     }
 
     @Test
+    public void updatePerfume(){
+        Perfume perfume = createTestPerfume();
+
+        when(perfumeRepository.save(perfume)).thenReturn(perfume);
+
+        perfumeService.updatePerfume(perfume);
+
+        verify(perfumeRepository).save(perfume);
+
+    };
+
+    @Test
     public void deleteById(){
         Long codigo = 1l;
 
@@ -73,6 +99,20 @@ public class PerfumeServiceTest {
         perfumeService.deletePerfumeById(codigo);
 
         verify(perfumeRepository, times(1)).deleteById(codigo);
+    }
+
+    @Test
+    public void accessPerfume(){
+        long code = 1L;
+        Perfume perfume = createTestPerfume();
+
+        when(perfumeRepository.findById(code)).thenReturn(Optional.of(perfume));
+
+        Perfume foundPerfume = perfumeService.accessPerfume(code);
+
+        assertNotNull(foundPerfume);
+        assertEquals(code, foundPerfume.getId());
+
     }
 
     private Perfume createTestPerfume() {
