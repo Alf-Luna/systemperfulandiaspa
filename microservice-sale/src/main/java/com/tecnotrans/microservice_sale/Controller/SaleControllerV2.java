@@ -149,8 +149,8 @@ public class SaleControllerV2 {
     @DeleteMapping("/{id}")
     public String deleteById(@PathVariable Long id){
         saleService.deleteById(id);
-        return "Eliminado";
-    }
+        return "Eliminado"; }
+
 
     /*
     // Ejemplo de método comentado para buscar venta por ID de perfume
@@ -204,7 +204,7 @@ public class SaleControllerV2 {
 
             } catch(Exception e){
                 Map<String,String> error = new HashMap<>();
-                error.put("message","No se ha encontrado un perufme valido");
+                error.put("message","No se ha encontrado un perfume valido");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
             }
 
