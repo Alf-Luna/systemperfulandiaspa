@@ -59,7 +59,6 @@ public class UserController {
         }
     }
 
-
     @PostMapping
     public ResponseEntity<?> save(@Valid @RequestBody UserDTO userDTO){
         try{  
