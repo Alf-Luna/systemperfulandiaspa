@@ -45,8 +45,9 @@ public class SaleServiceImpl implements ISaleService{
     }
 
     @Override
-    public void deleteById(Long id){
+    public String deleteById(Long id){
         iSaleRepository.deleteById(id);
+        return "";
     }
 
     /*@Override

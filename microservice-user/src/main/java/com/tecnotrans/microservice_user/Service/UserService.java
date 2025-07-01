@@ -39,8 +39,9 @@ public class UserService implements IUserService{
         userRepository.save(user);
     }
 
-    public void deleteUserById(Long id) {
+    public String deleteUserById(Long id) {
         userRepository.deleteById(id);
+        return ""; //Done just so I could test errors on ControllerTest
     }
 
     public boolean validateUser(Long id) {

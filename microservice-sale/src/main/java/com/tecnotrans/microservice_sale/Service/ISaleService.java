@@ -15,6 +15,6 @@ public interface ISaleService {
 
     //AccessPerfumeByIdResponse accessPerfumeById(Long idPerfume);
 
-    void deleteById(Long id);
+    String deleteById(Long id);
 
 }
