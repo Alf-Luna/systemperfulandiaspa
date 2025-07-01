@@ -125,15 +125,14 @@ public class SaleController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteById(@PathVariable Long id){
-        saleService.deleteById(id);
-        return "Eliminado";
+    public ResponseEntity<?> deleteById(@PathVariable Long id){
+        try{
+            saleService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } catch(Exception e){
+            return ResponseEntity.notFound().build();
+        }
     }
-
-    /*@GetMapping("/perfumeid/{id}")
-    public ResponseEntity<?> getSaleById(@PathVariable Long id){
-        return ResponseEntity.ok(iSaleService.accessPerfumeById(id));
-    }*/
 
     @PostMapping("/makeSale")
     @ResponseStatus(HttpStatus.CREATED)
@@ -176,26 +175,17 @@ public class SaleController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
             }
 
-            Sale perfumeSaved = saleService.save(sale);
-
-            SaleDTO dto = new SaleDTO();
-            dto.setId(perfumeSaved.getId());
-            dto.setDate(perfumeSaved.getDate());
-            dto.setQty(perfumeSaved.getQty());
-            dto.setIdPerfume(perfumeSaved.getIdPerfume());
-            dto.setIdUser(perfumeSaved.getIdUser());
-
             URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(sale.getId())
                 .toUri();
 
-            return ResponseEntity.created(location).body(dto);
+            return ResponseEntity.created(location).body(saleDTO);
         }
         catch(DataIntegrityViolationException e){
             Map<String,String> error = new HashMap<>();
-            error.put("message","El email ya está registrado");
+            error.put("message","Dato Invalido");
             return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
         }
     }

@@ -137,7 +137,6 @@ public class UserControllerTest {
 
     @Test
     public void testDelete() throws Exception{
-        //doNothing().when(userService).deleteUserById(1l);
         when(userService.deleteUserById(1l)).thenReturn("");
 
         mockMvc.perform(delete("/api/v1/users/1"))

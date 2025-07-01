@@ -61,12 +61,6 @@ public class PerfumeController {
         }
     }
 
-    
-    @ResponseStatus(HttpStatus.CREATED)
-    public void savePerfume(@RequestBody Perfume perfume){
-        perfumeService.addPerfume(perfume);
-    }
-
     @PostMapping("/create")
     public ResponseEntity<?> save(@Valid @RequestBody PerfumeDTO perfumeDTO){
         try{  
@@ -136,12 +130,7 @@ public class PerfumeController {
         }
     }
 
-    /*@GetMapping("/access-perfume-by-id/{id}")
-    public ResponseEntity<?> getPerfumeById(@PathVariable Long id){         
-        return ResponseEntity.ok(perfumeService.getPerfumeById(id));
-    }*/
-
-    @GetMapping("/darPefume/{id}")
+    @GetMapping("/darPerfume/{id}")
     public ResponseEntity<?> darPerfume(@PathVariable Long id){
         System.out.println("ejecutado dar perfume");
         return ResponseEntity.ok(perfumeService.getPerfumeById(id));

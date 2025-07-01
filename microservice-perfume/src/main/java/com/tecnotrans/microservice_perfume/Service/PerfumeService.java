@@ -38,8 +38,9 @@ public class PerfumeService implements IPerfumeService{
         perfumeRepository.save(perfume);
     }
 
-    public void deletePerfumeById(Long id) {
+    public String deletePerfumeById(Long id) {
         perfumeRepository.deleteById(id);
+        return "";
     }
 
     @Override
