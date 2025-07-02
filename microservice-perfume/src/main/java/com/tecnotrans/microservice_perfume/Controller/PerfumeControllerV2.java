@@ -50,13 +50,13 @@ public class PerfumeControllerV2 {
         @ApiResponses(value = {
             @ApiResponse(responseCode = "200", 
                          description = "Succesful retrieval of perfume list",
-                         content = @Content(mediaType = "application/hal.json",
+                         content = @Content(mediaType = "application/hal+json",
                             schema = @Schema(implementation = Perfume.class),
                             examples = @ExampleObject(value = "{\"id\": 1, \"name\": \"Eau de Parfum\", \"stock\": 100, \"price\": 59.99, \"brand\": \"Chanel\", \"_links\": {\"self\": {\"href\": \"http://localhost:8090/api/v2/perfumes/search/1\"}, \"all-perfumes\": {\"href\": \"http://localhost:8090/api/v2/perfumes/listAll\"}}}"))),
             @ApiResponse(responseCode = "500", 
                          description = "Internal server error",
                          content = @Content(
-                            mediaType = "application/hal.json",
+                            mediaType = "application/hal+json",
                             examples = @ExampleObject(value = "{\"timestamp\": \"2025-07-01T12:00:00\", \"status\": 500, \"error\": \"Internal Server Error\"}")))    
                             })
     public CollectionModel<EntityModel<Perfume>> getPerfumes() {
@@ -75,12 +75,12 @@ public class PerfumeControllerV2 {
         responses = {
             @ApiResponse(responseCode = "200", 
                          description = "Perfume found",
-                         content = @Content(mediaType = "application/hal.json",
+                         content = @Content(mediaType = "application/hal+json",
                             schema = @Schema(implementation = Perfume.class),
                             examples = @ExampleObject(value = "{\"id\": 1, \"name\": \"Eau de Parfum\", \"stock\": 100, \"price\": 59.99, \"brand\": \"Chanel\", \"_links\": {\"self\": {\"href\": \"http://localhost:8090/api/v2/perfumes/search/1\"}, \"all-perfumes\": {\"href\": \"http://localhost:8090/api/v2/perfumes/listAll\"}}}"))),
             @ApiResponse(responseCode = "404", 
                          description = "Perfume not found",
-                         content = @Content(mediaType = "application/hal.json",
+                         content = @Content(mediaType = "application/hal+json",
                          examples = @ExampleObject(value = "{\"timestamp\": \"2025-07-01T12:00:00\", \"status\": 404, \"message\": \"Perfume with ID: X not found\"}")))
         }
             ) 

@@ -68,7 +68,7 @@ public class UserController {
     @Operation(
         summary = "Get 1 user by ID", 
         description = "Returns a user using the ID number",
-        parameters = {@Parameter(name = "userID", description = "ID of the user to retrieve", required = true, example = "1")})
+        parameters = {@Parameter(name = "id", description = "ID of the user to retrieve", required = true, example = "1")})
         @ApiResponses(value = {
             @ApiResponse(responseCode = "200", 
                          description = "User found",
@@ -222,15 +222,15 @@ public class UserController {
     @GetMapping("/validateuser/{id}")
     @Operation(
         summary = "Validate if a user exists by its ID",
-        description = "Checks if a user exists and is valid using their ID",
+        description = "Checks if a user exists to make a sale using their ID",
         parameters = {@Parameter(name = "id", description = "ID of the user to validate", required = true, example = "5")})
         @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User exists"),
-            @ApiResponse(responseCode = "404", 
+            @ApiResponse(responseCode = "200", 
                          description = "User not found",
                          content = @Content(
                             mediaType = "application/json",
-                            examples = @ExampleObject(value = "{\"timestamp\": \"2025-07-01T12:00:00\", \"status\": 404, \"error\": \"No se encontró el usuario con esa ID: X\"}")
+                            examples = @ExampleObject(value = "false")
                          ))
 })
     public boolean validateUser(@PathVariable long id){

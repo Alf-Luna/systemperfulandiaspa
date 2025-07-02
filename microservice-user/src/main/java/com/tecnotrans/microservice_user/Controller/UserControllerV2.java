@@ -54,13 +54,13 @@ public class UserControllerV2 {
                          responseCode = "200",
                          description = "User found",
                          content = @Content(
-                                mediaType = "application/json",
+                                mediaType = "application/hal+json",
                                 schema = @Schema(implementation = User.class),
                                 examples = @ExampleObject(value = "{\"userId\":1,\"name\":\"Juan Lopez\",\"phoneNumber\":\"98765432\",\"email\":\"email@example.com\",\"_links\":{\"self\":{\"href\":\"http://localhost:8090/api/v1/users/1\"},\"all-users\":{\"href\":\"http://localhost:8090/api/v1/users/listAll\"}}}"))),
             @ApiResponse(responseCode = "500",
                          description = "Internal server error",
                          content = @Content(
-                            mediaType = "application/json",
+                            mediaType = "application/hal+json",
                             examples = @ExampleObject(value = "{\"timestamp\": \"2025-07-01T12:00:00\", \"status\": 500, \"error\": \"Internal Server Error\"}")))    
                             })
     public CollectionModel<EntityModel<User>> getUsers() {
@@ -79,13 +79,13 @@ public class UserControllerV2 {
         @ApiResponses(value = {
             @ApiResponse(responseCode = "200", 
                          description = "User found",
-                         content = @Content(mediaType = "application/hal.json",
+                         content = @Content(mediaType = "application/hal+json",
                             schema = @Schema(implementation = User.class),
                             examples = @ExampleObject(value = "{\"userId\":1,\"name\":\"Juan Lopez\",\"phoneNumber\":\"98765432\",\"email\":\"email@example.com\",\"_links\":{\"self\":{\"href\":\"http://localhost:8090/api/v2/users/1\"},\"all-users\":{\"href\":\"http://localhost:8090/api/v2/users/listAll\"}}}"))),
             @ApiResponse(responseCode = "404", 
                          description = "User not found",
                          content = @Content(
-                            mediaType = "application/hal.json",
+                            mediaType = "application/hal+json",
                             examples = @ExampleObject(value = "{\"timestamp\": \"2025-07-01T12:00:00\", \"status\": 404, \"error\": \"User with ID: X not found\"}")))})
     public ResponseEntity<?> getById(@PathVariable Long id) {
         Optional<User> user = userService.getUserByIdOpt(id);

@@ -15,7 +15,7 @@ public interface PerfumeClient {
     /*@GetMapping("/api/v1/perfumes/access-perfume-by-id/{id}")
     PerfumeDTO accessPerfumeById(@PathVariable Long id);*/
 
-    @GetMapping("api/v1/perfumes/darPefume/{id}")
+    @GetMapping("api/v1/perfumes/darPerfume/{id}")
     PerfumeDTO dameUnPerfume(@PathVariable Long id);
 
     @PostMapping("api/v1/perfumes/adjustStock/{id}")

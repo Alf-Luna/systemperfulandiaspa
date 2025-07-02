@@ -42,7 +42,7 @@ public class PerfumeControllerTest {
     PerfumeService perfumeService;
 
     @Test
-    public void testGetUsers() throws Exception{
+    public void testGetPerfumes() throws Exception{
         when(perfumeService.getPerfumes()).thenReturn(Arrays.asList(createTestPerfume()));
         
         mockMvc.perform(get("/api/v1/perfumes/listAll")).andDo(print())

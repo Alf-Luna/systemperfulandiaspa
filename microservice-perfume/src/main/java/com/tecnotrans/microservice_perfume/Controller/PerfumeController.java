@@ -220,17 +220,17 @@ public class PerfumeController {
 
 
     @GetMapping("/darPerfume/{id}")
-    @Operation(summary = "Get a perfume by its ID to",
+    @Operation(summary = "Get a perfume by its ID for validation",
                description = "Returns a perfume using its ID",
                parameters = {@Parameter(name = "id", description = "Id of the perfume", required = true, example = "1")})
         @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                          description = "Perfume found",
                          content = @Content(mediaType = "application/json", schema = @Schema(implementation = Perfume.class))),
-            @ApiResponse(responseCode = "404", 
-                          description = "Perfume not found", 
+            @ApiResponse(responseCode = "500", 
+                          description = "Internal Server Error", 
                           content = @Content(mediaType = "application/json",
-                          examples = @ExampleObject(value = "{\"message\": \"Perfume with ID: X not found\", \"status\": 404, \"timestamp\": \"2025-07-01T12:00:00\"}")))
+                          examples = @ExampleObject(value = "{\"timestamp\": \"2025-07-02T15:57:54.853+00:00\", \"status\": 500, \"error\": \"Internal Server Error\", \"path\": \"/api/v1/perfumes/darPerfume/15\"}")))
         })
     public ResponseEntity<?> darPerfume(@PathVariable Long id){
         System.out.println("ejecutado dar perfume");
@@ -239,17 +239,17 @@ public class PerfumeController {
 
     @PostMapping("/adjustStock/{id}")
     @Operation(
-        summary = "Adjusts the stock of a perfume", 
-        description = "Substracs stock from the given perfume ID",
+        summary = "Adjusts the stock of a perfume to make a sale", 
+        description = "Substracs stock from the given perfume ID to make a sale on sales microservice",
         parameters = {@Parameter(name = "id", description = "ID of the perfume", required = true, example = "1"),
                       @Parameter(name = "substract", description = "Amount of stock to substract", required = true, example = "4")}
         )
         @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Stock successfully adjusted"),
-            @ApiResponse(responseCode = "404", 
-                          description = "Perfume not found", 
+            @ApiResponse(responseCode = "500", 
+                          description = "Internal Server Error", 
                           content = @Content(mediaType = "application/json",
-                          examples = @ExampleObject(value = "{\"message\": \"Perfume with ID: X not found\", \"status\": 404, \"timestamp\": \"2025-07-01T12:00:00\"}")))
+                          examples = @ExampleObject(value = "{\"message\": \"Internal Server Error\", \"status\": 500, \"timestamp\": \"2025-07-01T12:00:00\"}")))
         })
     public void adjustStock(@PathVariable Long id, @RequestParam("substract") Integer substract){
         System.out.println("STOCK TO ADJUST = " + substract);

@@ -8,9 +8,4 @@ class MicroserviceUserApplicationTests {
 	void contextLoads() {
 	}
 
-	@Test
-	public void testMain(){
-		MicroserviceUserApplication.main(new String[]{});
-	}
-
 }

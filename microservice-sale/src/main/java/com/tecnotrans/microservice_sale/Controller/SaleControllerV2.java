@@ -51,23 +51,23 @@ private SaleModelAssembler assembler;
         @ApiResponses( value = {
             @ApiResponse(responseCode = "200", 
                          description = "Succesful retrieval of perfume list",
-                         content = @Content(mediaType = "application/hal.json",
+                         content = @Content(mediaType = "application/hal+json",
                             schema = @Schema(implementation = Sale.class),
                             examples = @ExampleObject(value = "{\"id\": 100, \"date\": \"2025-06-30T15:45:00\", \"qty\": 2, \"idPerfume\": 5, \"idUser\": 42, \"_links\": {\"self\": {\"href\": \"http://localhost:9090/api/v1/sales/search/100\"}, \"all-sales\": {\"href\": \"http://localhost:9090/api/v1/sales/listAll\"}}}"))),
             @ApiResponse(responseCode = "500", 
                          description = "Internal server error",
                          content = @Content(
-                            mediaType = "application/hal.json",
+                            mediaType = "application/hal+json",
                             examples = @ExampleObject(value = "{\"timestamp\": \"2025-07-01T12:00:00\", \"status\": 500, \"error\": \"Internal Server Error\"}")))
         }
             )
-    public CollectionModel<EntityModel<Sale>> findAll() {
+    public CollectionModel<EntityModel<Sale>> getAllSales() {
         List<EntityModel<Sale>> sales = saleService.findAll().stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
 
         return CollectionModel.of(sales,
-                    linkTo(methodOn(SaleControllerV2.class).findAll()).withSelfRel());
+                    linkTo(methodOn(SaleControllerV2.class).getAllSales()).withSelfRel());
                 }
 
 
@@ -78,22 +78,23 @@ private SaleModelAssembler assembler;
         responses = {
             @ApiResponse(responseCode = "200", 
                          description = "Sale found",
-                         content = @Content(mediaType = "application/hal.json",
+                         content = @Content(mediaType = "application/hal+json",
                             schema = @Schema(implementation = Sale.class),
                             examples = @ExampleObject(value = "{\"id\": 100, \"date\": \"2025-06-30T15:45:00\", \"qty\": 2, \"idPerfume\": 5, \"idUser\": 42, \"_links\": {\"self\": {\"href\": \"http://localhost:9090/api/v1/sales/search/100\"}, \"all-sales\": {\"href\": \"http://localhost:9090/api/v1/sales/listAll\"}}}") )),
             @ApiResponse(responseCode = "404", 
                          description = "Perfume not found",
-                         content = @Content(mediaType = "application/json",
+                         content = @Content(mediaType = "application/hal+json",
                          examples = @ExampleObject(value = "{\"timestamp\": \"2025-07-01T12:00:00\", \"status\": 404, \"message\": \"Sale with ID: X not found\"}") ))
         }
             ) 
-    public ResponseEntity<?> findByID(@PathVariable Long id) {
+    public ResponseEntity<?> getSaleById(@PathVariable Long id) {
         Optional<Sale> sale = saleService.findByIdOpt(id);    
         
         if(sale.isPresent()){
+            EntityModel<Sale> model = assembler.toModel(sale.get());
             return ResponseEntity.ok()
                         .header("mi-encabezado","valor")
-                        .body(sale.get());
+                        .body(model);
         }
         else{
             //Respuesta de error con cuerpo personalizado
