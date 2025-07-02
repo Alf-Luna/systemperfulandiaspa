@@ -1,5 +1,9 @@
 package com.tecnotrans.microservice_perfume.Controller;
 
+import com.tecnotrans.microservice_perfume.Model.Perfume;
+import com.tecnotrans.microservice_perfume.Service.PerfumeService;
+import com.tecnotrans.microservice_perfume.dto.PerfumeDTO;
+
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -7,7 +11,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,26 +25,59 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.tecnotrans.microservice_perfume.Model.Perfume;
-import com.tecnotrans.microservice_perfume.Service.PerfumeService;
-import com.tecnotrans.microservice_perfume.dto.PerfumeDTO;
-
 import jakarta.validation.Valid;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("api/v1/perfumes")
+@Tag(name = "Perfumes", description = "Operations related to perfumes")
 public class PerfumeController {
     
     @Autowired
     private PerfumeService perfumeService;
 
     @GetMapping("/listAll")
+    @Operation(summary = "Get all perfumes", description = "Returns a list of all perfumes avaliables in the catalog")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", 
+                         description = "Succesful retrieval of perfume list",
+                         content = @Content(mediaType = "application/json",
+                         schema = @Schema(implementation = Perfume.class))),
+            @ApiResponse(responseCode = "500", 
+                         description = "Internal server error",
+                         content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(value = "{\"timestamp\": \"2025-07-01T12:00:00\", \"status\": 500, \"error\": \"Internal Server Error\", \"message\": \"Unexpected error occurred\", \"path\": \"/api/v1/perfumes\"}")))    
+                            })
     public ResponseEntity<?> getPerfumes(){
         return ResponseEntity.ok(perfumeService.getPerfumes());
     }
         
-    @GetMapping("/search/{id}")    
-    public ResponseEntity<?> getById(@PathVariable Long id){
+    @GetMapping("/search/{id}")
+    @Operation(
+        summary = "Get 1 perfume by ID", 
+        description = "Returns a perfume using the ID number",
+        parameters = {@Parameter(name = "id", description = "ID of the perfume to retrieve", required = true, example = "1")})
+        @ApiResponses(value = {
+             @ApiResponse(responseCode = "200", 
+                          description = "Perfume found", 
+                          content = @Content(mediaType = "application/json", 
+                          schema = @Schema(implementation = Perfume.class))),
+             @ApiResponse(responseCode = "404", 
+                          description = "Perfume not found", 
+                          content = @Content(mediaType = "application/json",
+                          examples = @ExampleObject(value = "{\"message\": \"Perfume with ID: X not found\", \"status\": 404, \"timestamp\": \"2025-07-01T12:00:00\"}")))
+        }
+            )  
+    public ResponseEntity<?> getPerfumeById(@PathVariable Long id){
         Optional<Perfume> perfume = perfumeService.getPerfumeByIdOpt(id);    
         
         if(perfume.isPresent()){
@@ -52,7 +88,7 @@ public class PerfumeController {
         else{
             //Respuesta de error con cuerpo personalizado
             Map<String,String> errorBody = new HashMap<>();
-            errorBody.put("message","No se encontró un perfume con esa ID: " + id);
+            errorBody.put("message","Perfume with ID : " + id + " not found");
             errorBody.put("status","404");
             errorBody.put("timestamp",LocalDateTime.now().toString());
 
@@ -68,7 +104,26 @@ public class PerfumeController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> save(@Valid @RequestBody PerfumeDTO perfumeDTO){
+    @Operation(
+        summary = "Creates a new perfume", 
+        description = "Creates and saves a perfume using the provided details",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Perfume data to create",
+            required = true,
+            content = @Content(schema = @Schema(implementation = PerfumeDTO.class))
+        ))
+        @ApiResponses(value = {
+             @ApiResponse(responseCode = "201", 
+                          description = "Perfume successfully created",
+                          content = @Content(mediaType = "application/json",
+                          schema = @Schema(implementation = PerfumeDTO.class))),
+             @ApiResponse(responseCode = "500", 
+                         description = "Internal server error",
+                         content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(value = "{\"timestamp\": \"2025-07-01T12:00:00\", \"status\": 500, \"error\": \"Internal Server Error\"}")))    
+                            })
+    public ResponseEntity<?> addPerfume(@Valid @RequestBody PerfumeDTO perfumeDTO){
         try{  
             Perfume perfume = new Perfume();
             perfume.setId(perfumeDTO.getId());
@@ -93,14 +148,33 @@ public class PerfumeController {
                 .toUri();
 
             return ResponseEntity.created(location).body(dto);
-        } catch(DataIntegrityViolationException e){
+        } catch(Exception e){
             Map<String,String> error = new HashMap<>();
-            error.put("message","El email ya está registrado");
+            error.put("message","Internal server error");
             return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
         }
     }
 
     @PutMapping("/{id}")
+    @Operation(
+        summary = "Updates an existing perfume", 
+        description = "Updates a perfume using the provided details",
+        parameters = {@Parameter(name = "id", description = "ID of the perfume to update", required = true, example = "1")},
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Perfume data to update",
+            required = true,
+            content = @Content(schema = @Schema(implementation = PerfumeDTO.class))))
+        @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", 
+                         description = "Perfume successfully updated",
+                         content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PerfumeDTO.class))),
+            @ApiResponse(responseCode = "404", 
+                          description = "Perfume not found", 
+                          content = @Content(mediaType = "application/json",
+                          examples = @ExampleObject(value = "{\"message\": \"Perfume with ID: X not found\", \"status\": 404, \"timestamp\": \"2025-07-01T12:00:00\"}")))
+        }) 
     public ResponseEntity<PerfumeDTO> update(@PathVariable Long id, @RequestBody PerfumeDTO perfumeDTO){
         try{
             Perfume perfume = new Perfume();
@@ -127,6 +201,20 @@ public class PerfumeController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(
+        summary = "Deletes an existing perfume", 
+        description = "Deletes an existing perfume using the ID number",
+        parameters = {@Parameter(name = "id", description = "ID of the perfume to delete", required = true, example = "1")}
+        )
+        @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", 
+                         description = "Perfume successfully deleted",
+                         content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", 
+                          description = "Perfume not found", 
+                          content = @Content(mediaType = "application/json",
+                          examples = @ExampleObject(value = "{\"message\": \"Perfume with ID: X not found\", \"status\": 404, \"timestamp\": \"2025-07-01T12:00:00\"}")))
+        })
     public ResponseEntity<?> delete(@PathVariable Long id){
         try{
             perfumeService.deletePerfumeById(id);
@@ -136,18 +224,39 @@ public class PerfumeController {
         }
     }
 
-    /*@GetMapping("/access-perfume-by-id/{id}")
-    public ResponseEntity<?> getPerfumeById(@PathVariable Long id){         
-        return ResponseEntity.ok(perfumeService.getPerfumeById(id));
-    }*/
 
-    @GetMapping("/darPefume/{id}")
+    @GetMapping("/darPerfume/{id}")
+    @Operation(summary = "Get a perfume by its ID to",
+               description = "Returns a perfume using its ID",
+               parameters = {@Parameter(name = "id", description = "Id of the perfume", required = true, example = "1")})
+        @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                         description = "Perfume found",
+                         content = @Content(mediaType = "application/json", schema = @Schema(implementation = Perfume.class))),
+            @ApiResponse(responseCode = "404", 
+                          description = "Perfume not found", 
+                          content = @Content(mediaType = "application/json",
+                          examples = @ExampleObject(value = "{\"message\": \"Perfume with ID: X not found\", \"status\": 404, \"timestamp\": \"2025-07-01T12:00:00\"}")))
+        })
     public ResponseEntity<?> darPerfume(@PathVariable Long id){
         System.out.println("ejecutado dar perfume");
         return ResponseEntity.ok(perfumeService.getPerfumeById(id));
     }
 
     @PostMapping("/adjustStock/{id}")
+    @Operation(
+        summary = "Adjusts the stock of a perfume", 
+        description = "Substracs stock from the given perfume ID",
+        parameters = {@Parameter(name = "id", description = "ID of the perfume", required = true, example = "1"),
+                      @Parameter(name = "substract", description = "Amount of stock to substract", required = true, example = "4")}
+        )
+        @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Stock successfully adjusted"),
+            @ApiResponse(responseCode = "404", 
+                          description = "Perfume not found", 
+                          content = @Content(mediaType = "application/json",
+                          examples = @ExampleObject(value = "{\"message\": \"Perfume with ID: X not found\", \"status\": 404, \"timestamp\": \"2025-07-01T12:00:00\"}")))
+        })
     public void adjustStock(@PathVariable Long id, @RequestParam("substract") Integer substract){
         System.out.println("STOCK TO ADJUST = " + substract);
         Perfume perfume1 = perfumeService.getPerfumeById(id);

@@ -9,19 +9,86 @@ spring:
       discovery:
         locator:
           enabled: true
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:8080"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+              
       routes:
-        - id: perfumes
+        - id: perfumes-v1
           uri: http://localhost:8090
           predicates:             
             - Path=/api/v1/perfumes/**
-        - id: sales
+        - id: perfume-docs-v1
+          uri: http://localhost:8090
+          predicates:
+            - Path=/api/v1/perfumes/v3/api-docs
+        - id: perfumes-v2
+          uri: http://localhost:8090
+          predicates:
+            - Path=/api/v2/perfumes/**
+        - id: perfume-docs-v2
+          uri: http://localhost:8090
+          predicates:
+            - Path=/api/v2/perfumes/v3/api-docs
+        - id: sales-v1
           uri: http://localhost:9090
           predicates:
             - Path=/api/v1/sales/**
-        - id: users
+        - id: sale-docs-v1
+          uri: http://localhost:8090
+          predicates:
+            - Path=/api/v1/sales/v3/api-docs
+        - id: sales-v2
+          uri: http://localhost:9090
+          predicates:
+            - Path=/api/v2/sales/**
+        - id: sale-docs-v2
+          uri: http://localhost:8090
+          predicates:
+            - Path=/api/v2/sales/v3/api-docs
+        - id: users-v1
           uri: http://localhost:9080
           predicates:
             - Path=/api/v1/users/**
+        - id: user-docs-v1
+          uri: http://localhost:8090
+          predicates:
+            - Path=/api/v1/users/v3/api-docs
+        - id: users-v2
+          uri: http://localhost:9080
+          predicates:
+            - Path=/api/v2/users/**
+        - id: user-docs-v2
+          uri: http://localhost:8090
+          predicates:
+            - Path=/api/v2/users/v3/api-docs
+
+        - id: swagger-perfume
+          uri: http://localhost:8090
+          predicates:
+            - Path=/api/v1/perfumes/**
+          filters:
+            - StripPrefix=1
+        - id: swagger-sale
+          uri: http://localhost:9080
+          predicates:
+            - Path=/api/v1/sales/**
+          filters:
+            - StripPrefix=1
+        - id: swagger-user
+          uri: http://localhost:9090
+          predicates:
+            - Path=/api/v1/users/**
+          filters:
+            - StripPrefix=1
+
 
 eureka:
   client:

@@ -26,21 +26,61 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 
 @RestController
 @RequestMapping("api/v1/sales")
+@Tag(name = "Sales", description = "API for managing sales")
 public class SaleController {
 
     @Autowired
     private SaleServiceImpl saleService;
 
     @GetMapping("/listAll")
+    @Operation(
+        summary = "Get all sales",
+        description = "Retrieves a list of all recorded sales in the system")
+        @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", 
+                         description = "Sales successfully retrieved",
+                         content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Sale.class))),
+            @ApiResponse(responseCode = "500", 
+                         description = "Internal server error",
+                         content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(value = "{\"timestamp\": \"2025-07-01T12:00:00\", \"status\": 500, \"error\": \"Internal Server Error\", \"message\": \"Unexpected error occurred\", \"path\": \"/api/v1/perfumes\"}")
+                         ))
+        }
+    )
     public ResponseEntity<?> findAllSales() {
         return ResponseEntity.ok(saleService.findAll());
     }
     
     @GetMapping("/search/{id}")
+    @Operation(
+        summary = "Get sale by ID number",
+        description = "Retrieves a sale by its ID",
+        parameters = {@Parameter(name = "id", description = "ID of the sale to retrieve", required = true, example = "1")})
+        @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", 
+                         description = "Sale found",
+                         content = @Content(mediaType = "application/json",
+                         schema = @Schema(implementation = Sale.class))),
+            @ApiResponse(responseCode = "404", 
+                         description = "Sale not found",
+                         content = @Content(mediaType = "application/json",
+                         examples = @ExampleObject(value = "{\"timestamp\": \"2025-07-01T12:00:00\", \"status\": 404, \"message\": \"No se encontró una venta con la ID: X\"}")))
+        }
+    )
     public ResponseEntity<?> findByID(@PathVariable Long id) {
         Optional<Sale> sale = saleService.findByIdOpt(id);    
         
@@ -63,6 +103,27 @@ public class SaleController {
     
     //solo para agregar ventas realizadas previamente. No se deberia usar
     @PostMapping("/create")
+    @Operation(
+        summary = "Create a new sale",
+        description = "Creates a new sale",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Sale data to create",
+            required = true,
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = SaleDTO.class))
+        ))
+        @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", 
+                         description = "Sale successfully created",
+                         content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SaleDTO.class))),
+            @ApiResponse(responseCode = "500", 
+                         description = "Internal Server Error",
+                         content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(value = "{\"timestamp\": \"2025-07-01T12:00:00\", \"status\": 500, \"error\": \"Internal Server Error\"}")))
+        }
+    )
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> save(@RequestBody SaleDTO saleDTO){
         try{  
@@ -99,6 +160,26 @@ public class SaleController {
     }
 
     @PutMapping("/{id}")
+    @Operation(
+        summary = "Update an existing sale",
+        description = "Updates a sale using its ID and new details",
+        parameters = {@Parameter(name = "id", description = "ID of the sale to update", required = true, example = "1")},
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Sale data to update",
+            required = true,
+            content = @Content(schema = @Schema(implementation = SaleDTO.class))))
+        
+        @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", 
+                         description = "Sale successfully updated",
+                         content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SaleDTO.class))),
+            @ApiResponse(responseCode = "404", 
+                         description = "Sale not found",
+                         content = @Content(mediaType = "application/json",
+                         examples = @ExampleObject(value = "{\"timestamp\": \"2025-07-01T12:00:00\", \"status\": 404, \"message\": \"No se encontró una venta con la ID: X\"}")))
+        }
+    )
     public ResponseEntity<SaleDTO> update(@PathVariable Long id, @RequestBody SaleDTO saleDTO){
         try{
             Sale sale = new Sale();
@@ -125,6 +206,21 @@ public class SaleController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(
+        summary = "Delete a sale",
+        description = "Deletes a sale by its ID",
+        parameters = {@Parameter(name = "id", description = "ID of the sale to delete", required = true, example = "1")}
+        )
+        @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", 
+                         description = "Sale successfully deleted",
+                         content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", 
+                         description = "Sale not found",
+                         content = @Content(mediaType = "application/json",
+                         examples = @ExampleObject(value = "{\"timestamp\": \"2025-07-01T12:00:00\", \"status\": 404, \"message\": \"No se encontró una venta con la ID: X\"}")))
+        }
+    )
     public String deleteById(@PathVariable Long id){
         saleService.deleteById(id);
         return "Eliminado";
@@ -136,6 +232,38 @@ public class SaleController {
     }*/
 
     @PostMapping("/makeSale")
+    @Operation(
+        summary = "Make a new sale",
+        description = "Processes a new sale, validates user, stock, and updates inventory",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Sale information to be processed",
+            required = true,
+            content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = SaleDTO.class),
+            examples = @ExampleObject(value = "{\"id\": 1, \"date\": \"2025-07-01T12:34:56\", \"qty\": 2, \"idPerfume\": 3, \"idUser\": 5}"))
+        ))
+        @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", 
+                         description = "Sale completed successfully",
+                         content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SaleDTO.class),
+                            examples = @ExampleObject(value = "{\"id\": 1, \"date\": \"2025-07-01T12:34:56\", \"qty\": 2, \"idPerfume\": 3, \"idUser\": 5}")
+                         )),
+            @ApiResponse(responseCode = "404", 
+                         description = "User or perfume not found",
+                         content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(value = "{\"message\": \"No se ha encontrado un usuario válido\"}")
+                         )),
+            @ApiResponse(responseCode = "409", 
+                         description = "Not enough stock or invalid quantity",
+                         content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(value = "{\"message\": \"No hay stock suficiente para completar su compra\"}")
+                         ))
+        }
+    )
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> makeSale(@RequestBody SaleDTO saleDTO){
         try{  

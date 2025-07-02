@@ -24,21 +24,61 @@ import com.tecnotrans.microservice_user.Model.User;
 import com.tecnotrans.microservice_user.Service.UserService;
 import com.tecnotrans.microservice_user.dto.UserDTO;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("api/v1/users")
+@Tag(name = "Users", description = "API for managing users")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
     @GetMapping("/listAll")
+    @Operation(
+        summary = "Get all users", 
+        description = "Returns a list of all users registered on the system",
+        responses = {
+            @ApiResponse(responseCode = "200", 
+                         description = "Succesful retrieval of users list",
+                         content = @Content(mediaType = "application/json",
+                         schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "500", 
+                         description = "Internal server error",
+                         content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(value = "{\"timestamp\": \"2025-07-01T12:00:00\", \"status\": 500, \"error\": \"Internal Server Error\"}")
+                         ))
+        }
+            )
     public ResponseEntity<?> getUsers(){
         return ResponseEntity.ok(userService.getUsers());
     }
 
-    @GetMapping("/search/{id}")    
+    @GetMapping("/search/{id}")
+    @Operation(
+        summary = "Get 1 user by ID", 
+        description = "Returns a user using the ID number",
+        parameters = {@Parameter(name = "userID", description = "ID of the user to retrieve", required = true, example = "1")})
+        @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", 
+                         description = "User found",
+                         content = @Content(mediaType = "application/json",
+                         schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "404", 
+                         description = "User not found",
+                         content = @Content(mediaType = "application/json",
+                         examples = @ExampleObject(value = "{\"timestamp\": \"2025-07-01T12:00:00\", \"status\": 404, \"error\": \"No se encontró el usuario con esa ID: X\"}")))
+                        } )
     public ResponseEntity<?> getById(@PathVariable Long id){
         Optional<User> user = userService.getUserByIdOpt(id);    
         
@@ -60,7 +100,28 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@Valid @RequestBody UserDTO userDTO){
+    @Operation(
+        summary = "Creates a new user", 
+        description = "Creates and saves a user using the provided details",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                description = "User data to create",
+                required = true,
+                content = @Content(schema = @Schema(implementation = UserDTO.class))
+        ))
+        @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", 
+                         description = "User successfully created",
+                         content = @Content(mediaType = "application/json",
+                         schema = @Schema(implementation = UserDTO.class))),
+            @ApiResponse(responseCode = "500",
+                         description = "Internal server error",
+                         content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(value = "{\"timestamp\": \"2025-07-01T12:00:00\", \"status\": 500, \"error\": \"Internal Server Error\"}")
+                         ))
+
+        }) 
+    public ResponseEntity<?> addUser(@Valid @RequestBody UserDTO userDTO){
         try{  
             User user = new User();
             user.setUserId(userDTO.getUserId());
@@ -92,6 +153,25 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
+    @Operation(
+        summary = "Updates an existing user", 
+        description = "Updates a user using the provided details",
+        parameters = {@Parameter(name = "id", description = "ID of the user to update", required = true, example = "1")},
+        requestBody =  @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "User data to update",
+            required = true,
+            content = @Content(schema = @Schema(implementation = UserDTO.class))))
+        @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", 
+                         description = "User successfully updated",
+                         content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = UserDTO.class))),
+            @ApiResponse(responseCode = "404", 
+                         description = "User not found",
+                         content = @Content(mediaType = "application/json",
+                         examples = @ExampleObject(value = "{\"timestamp\": \"2025-07-01T12:00:00\", \"status\": 404, \"error\": \"No se encontró el usuario con esa ID: X\"}")))
+        })
     public ResponseEntity<UserDTO> update(@PathVariable Long id, @RequestBody UserDTO userDTO){
         try{
             User user = new User();
@@ -116,6 +196,19 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(
+        summary = "Deletes an existing user", 
+        description = "Deletes an existing user using the ID number",
+        parameters = {@Parameter(name = "id", description = "ID of the user to delete", required = true, example = "1")})
+        @ApiResponses(value = {
+            @ApiResponse(responseCode = "204",
+                         description = "User successfully deleted",
+                         content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", 
+                         description = "User not found",
+                         content = @Content(mediaType = "application/json",
+                         examples = @ExampleObject(value = "{\"timestamp\": \"2025-07-01T12:00:00\", \"status\": 404, \"error\": \"No se encontró el usuario con esa ID: X\"}")))
+        })
     public ResponseEntity<?> delete(@PathVariable Long id){
         System.out.println("received delete request");
         try{
@@ -127,6 +220,19 @@ public class UserController {
     }
 
     @GetMapping("/validateuser/{id}")
+    @Operation(
+        summary = "Validate if a user exists by its ID",
+        description = "Checks if a user exists and is valid using their ID",
+        parameters = {@Parameter(name = "id", description = "ID of the user to validate", required = true, example = "5")})
+        @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User exists"),
+            @ApiResponse(responseCode = "404", 
+                         description = "User not found",
+                         content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(value = "{\"timestamp\": \"2025-07-01T12:00:00\", \"status\": 404, \"error\": \"No se encontró el usuario con esa ID: X\"}")
+                         ))
+})
     public boolean validateUser(@PathVariable long id){
         return userService.validateUser(id);
     }

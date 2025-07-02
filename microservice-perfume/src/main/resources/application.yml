@@ -10,3 +10,13 @@ spring:
     url: jdbc:mysql://localhost:3306/perfulandia_db
     username: root
     password:
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /doc/swagger-ui.html
+    enabled: true
+
+ 
