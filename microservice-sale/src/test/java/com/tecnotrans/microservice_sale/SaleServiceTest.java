@@ -25,8 +25,6 @@ import com.tecnotrans.microservice_sale.Repository.ISaleRepository;
 import com.tecnotrans.microservice_sale.Service.SaleServiceImpl;
 import com.tecnotrans.microservice_sale.dto.PerfumeDTO;
 
-import net.datafaker.providers.base.Bool;
-
 @ExtendWith(MockitoExtension.class)
 public class SaleServiceTest {
 

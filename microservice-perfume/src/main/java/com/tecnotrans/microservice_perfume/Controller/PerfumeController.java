@@ -97,12 +97,6 @@ public class PerfumeController {
         }
     }
 
-    
-    @ResponseStatus(HttpStatus.CREATED)
-    public void savePerfume(@RequestBody Perfume perfume){
-        perfumeService.addPerfume(perfume);
-    }
-
     @PostMapping("/create")
     @Operation(
         summary = "Creates a new perfume", 
