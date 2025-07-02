@@ -25,7 +25,6 @@ import com.tecnotrans.microservice_sale.Controller.SaleController;
 import com.tecnotrans.microservice_sale.Model.Sale;
 import com.tecnotrans.microservice_sale.Service.SaleServiceImpl;
 import com.tecnotrans.microservice_sale.dto.PerfumeDTO;
-import com.tecnotrans.microservice_sale.dto.SaleDTO;
 
 import net.minidev.json.JSONObject;
 
@@ -294,13 +293,5 @@ public class TestSaleController {
         .stock(2)
         .price(2001)
         .brand("Ghibli").build();
-    }
-
-    private SaleDTO createTestSaleDto(){
-        return SaleDTO.builder()
-        .id(1L)
-        .idPerfume(1L)
-        .idUser(1L)
-        .date(LocalDateTime.now()).build();   
     }
 }
